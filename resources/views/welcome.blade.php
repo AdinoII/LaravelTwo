@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="{{ asset('assets/bootstrap/favicon.ico') }}">
 
-    <title>Fixed Top Navbar Example for Bootstrap</title>
+    <title>Adino || Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -74,17 +74,31 @@
     </nav>
 
     <div class="container">
-
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-        </p>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Contact list
+                        <a onclick="addForm()" class="btn btn-primary pull-right" style="margin-top: -8px;">Add Contact</a>
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <table id="contact-table" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th width="30">No</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
       </div>
-
+      @include('form')
     </div> <!-- /container -->
 
 
@@ -103,5 +117,47 @@
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="{{ asset('assets/bootstrap/js/ie10-viewport-bug-workaround.js') }}"></script>
+    <script type="text/javascript">
+      let table = $('#contact-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('api.contact') }}",
+        columns:[
+          {data: 'id', name:'id'},
+          {data: 'name', name:'name'},
+          {data: 'email', name:'email'},
+          {data: 'action', name:'action', orderable: false, searchable: false}
+        ]
+      });
+      function addForm() {
+        save_method = "add";
+        $('input[name=_method]').val('POST');
+        $('#modal-form').modal('show');
+        $('#modal-form form')[0].reset();
+        $('.modal-title').text('Add Contact');
+      }
+      $(function(){
+        $('#modal-form form').validator().on('submit', function (e) {
+          if (!e.isDefaultPrevented()){
+            var id = $('#id').val();
+            if(save_method == 'add') url = "{{ url('contact')}}";
+            else url = "{{ url('contact') . '/' }}" +id;
+            $.ajax({
+              url,
+              type: "POST",
+              data: $('#modal-form form').serialize(),
+              success : function($data) {
+                $('#modal-form').modal('hide');
+                table.ajax.reload();
+              },
+              error : function(){
+                alert('Oops! Something error!');
+              }
+            });
+            return false;
+          }
+        });
+      });
+    </script>
   </body>
 </html>
