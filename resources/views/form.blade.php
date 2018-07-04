@@ -28,13 +28,13 @@
                       </div>
                     </div>
 
-                    <!-- <div class="form-group">
-                        <label for="email" class="col-md-3 control-label">Photo</label>
+                    <div class="form-group">
+                        <label for="photo" class="col-md-3 control-label">Photo</label>
                         <div class="col-md-6">
                             <input type="file" id="photo" name="photo" class="form-control">
                             <span class="help-block with-errors"></span>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
 
                 <div class="modal-footer">
